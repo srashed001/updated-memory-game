@@ -8,7 +8,7 @@ highScore = localStorage.getItem('highScore') || 0;
 highScoreElement.innerText = `High Score: ${highScore}`
 
 let currentGame = false;
-let counter = 0;
+let counter = null;
 let card1 = null;
 let card2 = null; 
 let twoCardFlipped = false;
@@ -88,15 +88,27 @@ function startGame(){
 
     //checks if the card is already flipped, and checks if two cards are already flipped 
     //if the card is flipped/or there are two cards flipped, we exit function
+
     if(clickedCard.isFlipped) return; 
+
     if(twoCardFlipped) return;  
   
     
     clickedCard.style.backgroundColor = clickedCard.className;
     // console.log("you just clicked", clickedCard);
   
-    //assigns the clickedCard to either card1 or card2 
-    !card1 ? card1 = clickedCard : card2 = clickedCard;
+    //assigns the clickedCard to either card1 or card2, set isFlipped to true
+    //also prevents on you clicking on the same card, and triggering setTimeout function
+    if(!card1){
+      card1 = clickedCard;
+      card1.isFlipped = true
+    } else {
+      card2 = clickedCard; 
+      card2.isFlipped = true; 
+    };
+
+
+    // !card1 ? card1 = clickedCard  : card2 = clickedCard;
     card1 && card2 ? twoCardFlipped = true : twoCardFlipped = false;
   
   
@@ -119,9 +131,13 @@ function startGame(){
         return setTimeout(()=>{
           card1.style.backgroundColor = ""; 
           card2.style.backgroundColor = ""; 
+          card1.isFlipped = false; 
+          card2.isFlipped = false; 
           card1 = null; 
           card2 = null; 
           twoCardFlipped = false; 
+
+
         }, 1000);
       } else {
 
